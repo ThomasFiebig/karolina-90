@@ -56,7 +56,7 @@
     perspective:1800px;
     perspective-origin:50% 50%;
     width:min(360px, 88vw);
-    aspect-ratio: 3/4.6;
+    aspect-ratio: 3/5.0;
     z-index:1;
   }
 
@@ -80,7 +80,7 @@
     box-shadow:
       0 30px 60px rgba(60,20,10,.35),
       inset 0 0 0 1px rgba(168,128,58,.2);
-    padding: 40px 30px 24px;
+    padding: 44px 30px 30px;
     display:flex;flex-direction:column;
     overflow:hidden;
   }
@@ -109,8 +109,8 @@
   }
   .fliess{
     font-family:'Cormorant Garamond',serif;font-weight:400;
-    font-size:17px;line-height:1.55;text-align:center;color:var(--tinte);
-    display:flex;flex-direction:column;gap:11px;
+    font-size:16px;line-height:1.5;text-align:center;color:var(--tinte);
+    display:flex;flex-direction:column;gap:9px;
   }
   .fliess p{opacity:0;transform:translateY(6px);}
   .karte.offen .fliess p{animation:auf .55s ease forwards}
@@ -127,11 +127,26 @@
   }
   .signatur{
     font-family:'Great Vibes',cursive;font-weight:400;
-    color:var(--bordeaux);font-size:36px;text-align:center;margin-top:10px;
+    color:var(--bordeaux);font-size:32px;text-align:center;margin-top:8px;
     line-height:1;
     opacity:0;transform:translateY(6px);
   }
   .karte.offen .signatur{animation:auf .6s ease forwards 1.7s}
+
+  .schliessen{
+    position:absolute;top:14px;right:14px;z-index:4;
+    width:34px;height:34px;border-radius:50%;
+    background:transparent;border:1px solid rgba(168,128,58,.45);
+    color:var(--bordeaux);
+    font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    opacity:0;transform:scale(.85);
+    transition:opacity .3s ease .8s, transform .3s ease .8s, background .2s ease;
+  }
+  .karte.offen .schliessen{opacity:1;transform:scale(1)}
+  .schliessen:hover{background:rgba(168,128,58,.12)}
+  .schliessen:active{transform:scale(.92)}
 
   .aktionen{
     margin-top:auto;padding-top:14px;
@@ -304,6 +319,7 @@
 
     <!-- Innenseite (Text) -->
     <div class="innen">
+      <button class="schliessen" id="schliessen" type="button" aria-label="Karte zuklappen">×</button>
       <div class="kicker-i">herzliche</div>
       <div class="h-einladung">EINLADUNG</div>
       <div class="zierlinie"></div>
@@ -358,13 +374,22 @@
 <script>
   const karte = document.getElementById('karte');
   const cover = document.getElementById('cover');
+  const schliessen = document.getElementById('schliessen');
   function oeffnen(){
     karte.classList.remove('wackel');
     karte.classList.add('offen');
   }
+  function zuklappen(){
+    karte.classList.remove('offen');
+  }
   cover.addEventListener('click', oeffnen);
+  schliessen.addEventListener('click', e=>{ e.stopPropagation(); zuklappen(); });
   karte.addEventListener('keydown', e=>{
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();oeffnen();}
+    if(e.key==='Enter'||e.key===' '){
+      e.preventDefault();
+      karte.classList.contains('offen') ? zuklappen() : oeffnen();
+    }
+    if(e.key==='Escape' && karte.classList.contains('offen')) zuklappen();
   });
 </script>
 
