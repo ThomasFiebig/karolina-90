@@ -133,6 +133,26 @@
   }
   .karte.offen .signatur{animation:auf .6s ease forwards 1.7s}
 
+  .musik-btn{
+    position:fixed;top:22px;right:22px;z-index:10;
+    width:38px;height:38px;border-radius:50%;
+    background:rgba(251,245,228,.9);
+    border:1px solid rgba(168,128,58,.4);
+    color:var(--bordeaux);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(60,20,10,.15);
+    transition:transform .2s ease, background .2s ease, opacity .3s ease;
+    opacity:0;pointer-events:none;
+  }
+  .musik-btn.aktiv{opacity:1;pointer-events:auto}
+  .musik-btn:hover{background:rgba(251,245,228,1);transform:scale(1.05)}
+  .musik-btn:active{transform:scale(.94)}
+  .musik-btn svg{width:18px;height:18px}
+  .musik-btn .off{display:none}
+  .musik-btn.stumm .an{display:none}
+  .musik-btn.stumm .off{display:block}
+
   .schliessen{
     position:absolute;top:14px;right:14px;z-index:4;
     width:34px;height:34px;border-radius:50%;
@@ -373,19 +393,87 @@
 
 <div class="hint">Karte antippen</div>
 
+<button class="musik-btn" id="musik-btn" type="button" aria-label="Musik ein/aus">
+  <svg class="an" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+    <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
+    <path d="M19 5a9 9 0 0 1 0 14"/>
+  </svg>
+  <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+    <line x1="22" y1="9" x2="16" y2="15"/>
+    <line x1="16" y1="9" x2="22" y2="15"/>
+  </svg>
+</button>
+
+<audio id="musik" src="assets/musik.mp3?v=1" loop preload="auto"></audio>
+
 <script>
   const karte = document.getElementById('karte');
   const cover = document.getElementById('cover');
   const schliessen = document.getElementById('schliessen');
+  const musik = document.getElementById('musik');
+  const musikBtn = document.getElementById('musik-btn');
+  const ZIEL_VOLUME = 0.28;
+
+  function fadeMusik(zielVolume, dauerMs){
+    const start = musik.volume;
+    const t0 = performance.now();
+    function step(t){
+      const p = Math.min(1, (t-t0)/dauerMs);
+      musik.volume = start + (zielVolume-start)*p;
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function musikStarten(){
+    if(!musik.paused) return;
+    musik.volume = 0;
+    const p = musik.play();
+    if(p && p.then){
+      p.then(()=>{
+        musikBtn.classList.add('aktiv');
+        musikBtn.classList.remove('stumm');
+        fadeMusik(ZIEL_VOLUME, 1600);
+      }).catch(()=>{
+        musikBtn.classList.add('aktiv','stumm');
+      });
+    }
+  }
+
   function oeffnen(){
     karte.classList.remove('wackel');
     karte.classList.add('offen');
+    musikStarten();
   }
   function zuklappen(){
     karte.classList.remove('offen');
   }
+
   cover.addEventListener('click', oeffnen);
   schliessen.addEventListener('click', e=>{ e.stopPropagation(); zuklappen(); });
+
+  musikBtn.addEventListener('click', ()=>{
+    if(musik.paused){
+      musik.volume = 0;
+      musik.play().then(()=>{
+        musikBtn.classList.remove('stumm');
+        fadeMusik(ZIEL_VOLUME, 800);
+      }).catch(()=>{});
+    } else {
+      musikBtn.classList.add('stumm');
+      const start = musik.volume;
+      const t0 = performance.now();
+      (function fadeOut(t){
+        const p = Math.min(1,(t-t0)/500);
+        musik.volume = start*(1-p);
+        if(p<1) requestAnimationFrame(fadeOut);
+        else musik.pause();
+      })(performance.now());
+    }
+  });
+
   karte.addEventListener('keydown', e=>{
     if(e.key==='Enter'||e.key===' '){
       e.preventDefault();
