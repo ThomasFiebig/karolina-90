@@ -174,19 +174,20 @@
     to{background-position:0 0}
   }
   .stift{
-    position:absolute;top:65%;left:0;
-    width:5px;height:5px;border-radius:50%;
-    background:var(--bordeaux);
-    transform:translate(-50%,-50%) scale(0);
-    box-shadow:0 0 10px rgba(92,20,40,.5), 0 1px 3px rgba(0,0,0,.2);
+    position:absolute;top:55%;left:0;
+    width:26px;height:34px;
+    transform:translate(-3px,-2px) scale(0);
+    transform-origin:3px 32px;
     pointer-events:none;
+    filter:drop-shadow(0 2px 3px rgba(60,20,10,.35));
   }
   .karte.offen .stift{animation:stift-wandert 2.8s cubic-bezier(.55,.08,.4,1) both 1.4s}
   @keyframes stift-wandert{
-    0%{left:0;transform:translate(-50%,-50%) scale(0)}
-    5%{transform:translate(-50%,-50%) scale(1)}
-    95%{transform:translate(-50%,-50%) scale(1);left:100%}
-    100%{left:100%;transform:translate(-50%,-50%) scale(0)}
+    0%{left:0;transform:translate(-3px,-2px) scale(0)}
+    5%{transform:translate(-3px,-2px) scale(1)}
+    50%{transform:translate(-3px,-4px) scale(1)}
+    95%{transform:translate(-3px,-2px) scale(1);left:100%}
+    100%{left:100%;transform:translate(-3px,-2px) scale(0)}
   }
 
   .musik-btn{
@@ -431,7 +432,26 @@
       </div>
       <div class="signatur-wrap">
         <span class="signatur">Eure Karolina</span>
-        <span class="stift" aria-hidden="true"></span>
+        <svg class="stift" aria-hidden="true" viewBox="0 0 26 34" xmlns="http://www.w3.org/2000/svg">
+          <g transform="rotate(28 13 17)">
+            <!-- Kappe oben -->
+            <rect x="10" y="2" width="6" height="3" rx=".8" fill="#3d0d1a"/>
+            <!-- Clip -->
+            <path d="M12 4 L12 12 L14 12 L14 4 Z" fill="#c9a04a"/>
+            <!-- Body -->
+            <rect x="10" y="5" width="6" height="19" fill="#5c1428"/>
+            <!-- Goldring -->
+            <rect x="10" y="15" width="6" height="1.6" fill="#c9a04a"/>
+            <!-- Übergang zur Feder -->
+            <rect x="10.5" y="24" width="5" height="2" fill="#3d0d1a"/>
+            <!-- Federspitze -->
+            <path d="M11 26 L13 32 L15 26 Z" fill="#3d0d1a"/>
+            <!-- Feder-Schlitz -->
+            <line x1="13" y1="27" x2="13" y2="31.5" stroke="#c9a04a" stroke-width=".5"/>
+            <!-- Feder-Loch -->
+            <circle cx="13" cy="28" r=".7" fill="#c9a04a"/>
+          </g>
+        </svg>
       </div>
 
       <div class="aktionen">
