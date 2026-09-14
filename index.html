@@ -553,27 +553,33 @@
     if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }
   });
 
-  // Musik pausieren, wenn Seite/Tab in Hintergrund geht
+  // Musik pausieren, wenn Seite/Tab in Hintergrund geht oder Fenster den Fokus verliert
   let warAmSpielenVorHide = false;
-  document.addEventListener('visibilitychange', ()=>{
-    if(document.hidden){
-      warAmSpielenVorHide = !musik.paused;
-      if(!musik.paused){
-        const start = musik.volume;
-        const t0 = performance.now();
-        (function fadeOut(t){
-          const p = Math.min(1,(t-t0)/300);
-          musik.volume = start*(1-p);
-          if(p<1) requestAnimationFrame(fadeOut);
-          else musik.pause();
-        })(performance.now());
-      }
-    } else if(warAmSpielenVorHide && !musikBtn.classList.contains('stumm')){
+  function musikStoppenBeiHide(){
+    if(!musik.paused){
+      warAmSpielenVorHide = true;
+      musik.pause();  // sofort, kein rAF-Fade — der feuert bei hidden-Tab nicht mehr
+    }
+  }
+  function musikWiederAufnehmen(){
+    if(warAmSpielenVorHide && !musikBtn.classList.contains('stumm') && musik.paused){
       musik.volume = 0;
       musik.play().then(()=>fadeMusik(ZIEL_VOLUME, 800)).catch(()=>{});
+      warAmSpielenVorHide = false;
     }
+  }
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden) musikStoppenBeiHide();
+    else musikWiederAufnehmen();
   });
+  window.addEventListener('blur', musikStoppenBeiHide);
+  window.addEventListener('focus', musikWiederAufnehmen);
   window.addEventListener('pagehide', ()=>{ musik.pause(); });
+
+  // Auto-Öffnen nach 5 Sekunden — für alle, die tippen/wischen nicht kennen
+  setTimeout(()=>{
+    if(!karte.classList.contains('offen')) oeffnen();
+  }, 5000);
 </script>
 
 </body>
