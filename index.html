@@ -56,12 +56,12 @@
     perspective:1800px;
     perspective-origin:50% 50%;
     width:min(340px, 86vw);
-    aspect-ratio: 3/5.2;
-    max-height: 88dvh;
+    aspect-ratio: 3/5.0;
+    max-height: 90dvh;
     z-index:1;
   }
   @supports not (height: 1dvh){
-    .buehne{ max-height: 88vh; }
+    .buehne{ max-height: 90vh; }
   }
 
   .karte{
@@ -97,61 +97,58 @@
   }
 
   .medaillon{
-    position:relative;width:82px;height:82px;border-radius:50%;
-    margin:4px auto 10px;
+    position:relative;width:78px;height:78px;border-radius:50%;
+    margin:2px auto 8px;
     background:url("assets/portrait_aktuell.jpg") 65% 12% / cover no-repeat;
     box-shadow:
       0 0 0 1px rgba(168,128,58,.55),
-      0 0 0 4px var(--creme-hell),
-      0 0 0 5px rgba(168,128,58,.35),
-      0 8px 20px rgba(60,20,10,.28);
-    opacity:0;transform:scale(.85);
+      0 0 0 3px var(--creme-hell),
+      0 0 0 4px rgba(168,128,58,.35),
+      0 6px 16px rgba(60,20,10,.28);
   }
-  .karte.offen .medaillon{animation:medFade .7s cubic-bezier(.4,1.5,.5,1) forwards .55s}
+  .karte.offen .medaillon{animation:medFade .7s cubic-bezier(.4,1.5,.5,1) both .55s}
   @keyframes medFade{
     from{opacity:0;transform:scale(.7) rotate(-10deg)}
     to{opacity:1;transform:scale(1) rotate(0)}
   }
   .kicker-i{
     font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
-    color:var(--bordeaux);font-size:20px;text-align:center;letter-spacing:.5px;
-    margin-bottom:2px;
+    color:var(--bordeaux);font-size:18px;text-align:center;letter-spacing:.5px;
+    margin-bottom:1px;
   }
   .h-einladung{
     font-family:'Playfair Display',serif;font-weight:700;
-    letter-spacing:8px;font-size:22px;
+    letter-spacing:6px;font-size:19px;
     color:var(--tinte);text-align:center;
-    margin-bottom:8px;
+    margin-bottom:6px;
   }
   .zierlinie{
-    height:1px;width:56%;margin:6px auto 20px;
+    height:1px;width:56%;margin:4px auto 14px;
     background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
   .fliess{
     font-family:'Cormorant Garamond',serif;font-weight:400;
-    font-size:15.5px;line-height:1.5;text-align:center;color:var(--tinte);
-    display:flex;flex-direction:column;gap:8px;
+    font-size:15px;line-height:1.45;text-align:center;color:var(--tinte);
+    display:flex;flex-direction:column;gap:7px;
   }
-  .fliess p{opacity:0;transform:translateY(6px);}
-  .karte.offen .fliess p{animation:auf .55s ease forwards}
+  .karte.offen .fliess p{animation:auf .55s ease both}
   .karte.offen .fliess p:nth-child(1){animation-delay:.85s}
   .karte.offen .fliess p:nth-child(2){animation-delay:1.00s}
   .karte.offen .fliess p:nth-child(3){animation-delay:1.15s}
   .karte.offen .fliess p:nth-child(4){animation-delay:1.30s}
   .karte.offen .fliess p:nth-child(5){animation-delay:1.45s}
-  @keyframes auf{to{opacity:1;transform:translateY(0)}}
+  @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .datum{
     font-family:'Playfair Display',serif;font-weight:700;
-    color:var(--bordeaux);font-size:18px;letter-spacing:1px;
-    display:block;margin:4px 0;
+    color:var(--bordeaux);font-size:16px;letter-spacing:1px;
+    display:block;margin:3px 0;
   }
   .signatur{
     font-family:'Great Vibes',cursive;font-weight:400;
-    color:var(--bordeaux);font-size:28px;text-align:center;margin-top:6px;
+    color:var(--bordeaux);font-size:26px;text-align:center;margin-top:4px;
     line-height:1;
-    opacity:0;transform:translateY(6px);
   }
-  .karte.offen .signatur{animation:auf .6s ease forwards 1.7s}
+  .karte.offen .signatur{animation:auf .6s ease both 1.7s}
 
   .musik-btn{
     position:fixed;top:22px;right:22px;z-index:10;
@@ -189,15 +186,14 @@
   .schliessen:active{transform:scale(.92)}
 
   .aktionen{
-    margin-top:auto;padding-top:16px;
-    display:flex;flex-direction:column;gap:7px;
-    opacity:0;transform:translateY(6px);
+    margin-top:auto;padding-top:12px;
+    display:flex;flex-direction:column;gap:6px;
   }
-  .karte.offen .aktionen{animation:auf .6s ease forwards 1.9s}
+  .karte.offen .aktionen{animation:auf .6s ease both 1.9s}
   .btn{
     display:block;text-align:center;text-decoration:none;
-    padding:10px 14px;border-radius:2px;
-    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:14px;
+    padding:9px 12px;border-radius:2px;
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:13px;
     letter-spacing:1.5px;text-transform:uppercase;
   }
   .btn-primary{
@@ -530,6 +526,28 @@
     }
     if(e.key==='Escape' && karte.classList.contains('offen')) zuklappen();
   });
+
+  // Musik pausieren, wenn Seite/Tab in Hintergrund geht
+  let warAmSpielenVorHide = false;
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){
+      warAmSpielenVorHide = !musik.paused;
+      if(!musik.paused){
+        const start = musik.volume;
+        const t0 = performance.now();
+        (function fadeOut(t){
+          const p = Math.min(1,(t-t0)/300);
+          musik.volume = start*(1-p);
+          if(p<1) requestAnimationFrame(fadeOut);
+          else musik.pause();
+        })(performance.now());
+      }
+    } else if(warAmSpielenVorHide && !musikBtn.classList.contains('stumm')){
+      musik.volume = 0;
+      musik.play().then(()=>fadeMusik(ZIEL_VOLUME, 800)).catch(()=>{});
+    }
+  });
+  window.addEventListener('pagehide', ()=>{ musik.pause(); });
 </script>
 
 </body>
