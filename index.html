@@ -148,12 +148,44 @@
     color:var(--bordeaux);font-size:16px;letter-spacing:1px;
     display:block;margin:3px 0;
   }
+  .signatur-wrap{
+    position:relative;display:inline-block;
+    align-self:center;
+    margin-top:6px;line-height:1;
+  }
   .signatur{
     font-family:'Great Vibes',cursive;font-weight:400;
-    color:var(--bordeaux);font-size:clamp(24px, 6.5vw, 30px);text-align:center;margin-top:4px;
-    line-height:1;
+    font-size:clamp(24px, 6.5vw, 30px);line-height:1;
+    color:var(--bordeaux);
+    background:linear-gradient(90deg,
+      var(--bordeaux) 0%, var(--bordeaux) 50%,
+      transparent 50%, transparent 100%);
+    background-size:200% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    display:inline-block;
   }
-  .karte.offen .signatur{animation:auf .6s ease both 1.7s}
+  .karte.offen .signatur{animation:schreiben 2.8s cubic-bezier(.55,.08,.4,1) both 1.4s}
+  @keyframes schreiben{
+    from{background-position:100% 0}
+    to{background-position:0 0}
+  }
+  .stift{
+    position:absolute;top:65%;left:0;
+    width:5px;height:5px;border-radius:50%;
+    background:var(--bordeaux);
+    transform:translate(-50%,-50%) scale(0);
+    box-shadow:0 0 10px rgba(92,20,40,.5), 0 1px 3px rgba(0,0,0,.2);
+    pointer-events:none;
+  }
+  .karte.offen .stift{animation:stift-wandert 2.8s cubic-bezier(.55,.08,.4,1) both 1.4s}
+  @keyframes stift-wandert{
+    0%{left:0;transform:translate(-50%,-50%) scale(0)}
+    5%{transform:translate(-50%,-50%) scale(1)}
+    95%{transform:translate(-50%,-50%) scale(1);left:100%}
+    100%{left:100%;transform:translate(-50%,-50%) scale(0)}
+  }
 
   .musik-btn{
     position:fixed;top:22px;right:22px;z-index:10;
@@ -396,7 +428,10 @@
         <p>Gebt mir bitte bald Bescheid, ob ihr dabei seid.</p>
         <p>Ich freue mich schon riesig auf euch!</p>
       </div>
-      <div class="signatur">Eure Karolina</div>
+      <div class="signatur-wrap">
+        <span class="signatur">Eure Karolina</span>
+        <span class="stift" aria-hidden="true"></span>
+      </div>
 
       <div class="aktionen">
         <a class="btn btn-primary"
@@ -580,6 +615,15 @@
   setTimeout(()=>{
     if(!karte.classList.contains('offen')) oeffnen();
   }, 5000);
+
+  // Erste Berührung/Klick/Tastenanschlag irgendwo startet die Musik
+  // (Autoplay ohne User-Geste wird von iOS/Chrome hart blockiert)
+  function erstesInteraktions_Handler(){
+    if(musik.paused && !musikBtn.classList.contains('stumm')) musikStarten();
+  }
+  ['pointerdown','touchstart','click','keydown'].forEach(evt =>
+    document.addEventListener(evt, erstesInteraktions_Handler, {once:true, capture:true, passive:true})
+  );
 </script>
 
 </body>
