@@ -123,9 +123,9 @@
   }
   .h-einladung{
     font-family:'Playfair Display',serif;font-weight:700;
-    letter-spacing:6px;font-size:18px;
+    letter-spacing:6px;font-size:clamp(18px, 5vw, 22px);
     color:var(--tinte);text-align:center;
-    margin-bottom:4px;
+    margin-bottom:6px;
   }
   .zierlinie{
     height:1px;width:56%;margin:3px auto 10px;
@@ -133,8 +133,8 @@
   }
   .fliess{
     font-family:'Cormorant Garamond',serif;font-weight:400;
-    font-size:clamp(14.5px, 4.2vw, 17px);line-height:1.4;text-align:center;color:var(--tinte);
-    display:flex;flex-direction:column;gap:6px;
+    font-size:clamp(16px, 4.7vw, 19px);line-height:1.42;text-align:center;color:var(--tinte);
+    display:flex;flex-direction:column;gap:8px;
   }
   .karte.offen .fliess p{animation:auf .55s ease both}
   .karte.offen .fliess p:nth-child(1){animation-delay:.85s}
@@ -144,8 +144,8 @@
   @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .datum{
     font-family:'Playfair Display',serif;font-weight:700;
-    color:var(--bordeaux);font-size:15.5px;letter-spacing:1px;
-    display:block;margin:2px 0;
+    color:var(--bordeaux);font-size:clamp(15.5px, 4.4vw, 18px);letter-spacing:1px;
+    display:block;margin:4px 0;
   }
   .signatur-wrap{
     position:relative;display:inline-block;
@@ -156,7 +156,7 @@
   }
   .signatur{
     font-family:'Great Vibes',cursive;font-weight:400;
-    font-size:clamp(22px, 6vw, 28px);line-height:1.25;
+    font-size:clamp(26px, 7.5vw, 34px);line-height:1.25;
     color:var(--bordeaux);
     background:linear-gradient(90deg,
       var(--bordeaux) 0%, var(--bordeaux) 50%,
@@ -216,9 +216,9 @@
   .karte.offen .aktionen{animation:auf .6s ease both 1.9s}
   .btn{
     display:block;text-align:center;text-decoration:none;
-    padding:8px 12px;border-radius:2px;
-    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:12.5px;
-    letter-spacing:1.3px;text-transform:uppercase;
+    padding:10px 14px;border-radius:2px;
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:13.5px;
+    letter-spacing:1.4px;text-transform:uppercase;
   }
   .btn-primary{
     background:var(--bordeaux);color:var(--creme-hell);
