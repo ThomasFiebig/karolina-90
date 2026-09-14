@@ -84,7 +84,7 @@
     box-shadow:
       0 30px 60px rgba(60,20,10,.35),
       inset 0 0 0 1px rgba(168,128,58,.2);
-    padding: 24px 26px 28px;
+    padding: 22px 24px 24px;
     display:flex;flex-direction:column;
     overflow-y:auto;overflow-x:hidden;
     -webkit-overflow-scrolling:touch;
@@ -100,10 +100,10 @@
 
   .medaillon{
     position:relative;
-    width:clamp(78px, 24vw, 100px);height:clamp(78px, 24vw, 100px);
+    width:clamp(72px, 22vw, 90px);height:clamp(72px, 22vw, 90px);
     aspect-ratio:1/1;flex-shrink:0;flex-grow:0;
     border-radius:50%;
-    margin:14px auto 12px;
+    margin:10px auto 8px;
     background:url("assets/portrait_aktuell.jpg") 65% 12% / cover no-repeat;
     box-shadow:
       0 0 0 1px rgba(168,128,58,.55),
@@ -123,18 +123,18 @@
   }
   .h-einladung{
     font-family:'Playfair Display',serif;font-weight:700;
-    letter-spacing:6px;font-size:19px;
+    letter-spacing:6px;font-size:18px;
     color:var(--tinte);text-align:center;
-    margin-bottom:6px;
+    margin-bottom:4px;
   }
   .zierlinie{
-    height:1px;width:56%;margin:4px auto 14px;
+    height:1px;width:56%;margin:3px auto 10px;
     background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
   .fliess{
     font-family:'Cormorant Garamond',serif;font-weight:400;
-    font-size:clamp(14px, 4vw, 16px);line-height:1.42;text-align:center;color:var(--tinte);
-    display:flex;flex-direction:column;gap:7px;
+    font-size:clamp(13.5px, 3.8vw, 15.5px);line-height:1.38;text-align:center;color:var(--tinte);
+    display:flex;flex-direction:column;gap:5px;
   }
   .karte.offen .fliess p{animation:auf .55s ease both}
   .karte.offen .fliess p:nth-child(1){animation-delay:.85s}
@@ -145,19 +145,19 @@
   @keyframes auf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .datum{
     font-family:'Playfair Display',serif;font-weight:700;
-    color:var(--bordeaux);font-size:16px;letter-spacing:1px;
-    display:block;margin:3px 0;
+    color:var(--bordeaux);font-size:14.5px;letter-spacing:1px;
+    display:block;margin:2px 0;
   }
   .signatur-wrap{
     position:relative;display:inline-block;
     align-self:center;
-    margin-top:14px;padding-bottom:8px;
-    line-height:1.35;
+    margin-top:8px;padding-bottom:4px;
+    line-height:1.25;
     z-index:3;
   }
   .signatur{
     font-family:'Great Vibes',cursive;font-weight:400;
-    font-size:clamp(24px, 6.5vw, 30px);line-height:1.35;
+    font-size:clamp(22px, 6vw, 28px);line-height:1.25;
     color:var(--bordeaux);
     background:linear-gradient(90deg,
       var(--bordeaux) 0%, var(--bordeaux) 50%,
@@ -167,7 +167,7 @@
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;
     display:inline-block;
-    padding:0 4px 4px;
+    padding:0 4px 2px;
   }
   .karte.offen .signatur{animation:schreiben 2.8s cubic-bezier(.55,.08,.4,1) both 1.4s}
   @keyframes schreiben{
@@ -211,15 +211,15 @@
   .musik-btn.stumm .off{display:block}
 
   .aktionen{
-    margin-top:auto;padding-top:12px;
-    display:flex;flex-direction:column;gap:6px;
+    margin-top:auto;padding-top:8px;
+    display:flex;flex-direction:column;gap:5px;
   }
   .karte.offen .aktionen{animation:auf .6s ease both 1.9s}
   .btn{
     display:block;text-align:center;text-decoration:none;
-    padding:9px 12px;border-radius:2px;
-    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:13px;
-    letter-spacing:1.5px;text-transform:uppercase;
+    padding:8px 12px;border-radius:2px;
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:12.5px;
+    letter-spacing:1.3px;text-transform:uppercase;
   }
   .btn-primary{
     background:var(--bordeaux);color:var(--creme-hell);
