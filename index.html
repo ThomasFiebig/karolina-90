@@ -97,8 +97,11 @@
   }
 
   .medaillon{
-    position:relative;width:78px;height:78px;border-radius:50%;
-    margin:2px auto 8px;
+    position:relative;
+    width:92px;height:92px;
+    aspect-ratio:1/1;flex-shrink:0;flex-grow:0;
+    border-radius:50%;
+    margin:2px auto 10px;
     background:url("assets/portrait_aktuell.jpg") 65% 12% / cover no-repeat;
     box-shadow:
       0 0 0 1px rgba(168,128,58,.55),
@@ -367,7 +370,6 @@
     <div class="innen">
       <button class="schliessen" id="schliessen" type="button" aria-label="Karte zuklappen">×</button>
       <div class="medaillon" aria-hidden="true"></div>
-      <div class="kicker-i">herzliche</div>
       <div class="h-einladung">EINLADUNG</div>
       <div class="zierlinie"></div>
       <div class="fliess">
@@ -418,7 +420,7 @@
   </div>
 </div>
 
-<div class="hint">Karte antippen</div>
+<div class="hint">Tippen · wischen · scrollen</div>
 
 <button class="musik-btn" id="musik-btn" type="button" aria-label="Musik ein/aus">
   <svg class="an" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -481,9 +483,9 @@
   cover.addEventListener('click', oeffnen);
   schliessen.addEventListener('click', e=>{ e.stopPropagation(); zuklappen(); });
 
-  // Wisch-Gestik: swipe links = öffnen, swipe rechts = schließen
+  // Wisch-Gestik: swipe rechts = öffnen, swipe links = schließen
   let startX = null, startY = null;
-  const SWIPE_MIN = 55;
+  const SWIPE_MIN = 50;
   karte.addEventListener('pointerdown', e => {
     if (e.target.closest('a, button')) return;
     startX = e.clientX; startY = e.clientY;
@@ -493,11 +495,38 @@
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
     startX = startY = null;
-    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy)*1.2) return;
-    if (dx < 0 && !karte.classList.contains('offen')) oeffnen();
-    else if (dx > 0 && karte.classList.contains('offen')) zuklappen();
+    if (Math.abs(dx) >= SWIPE_MIN && Math.abs(dx) > Math.abs(dy)*1.1){
+      if (dx > 0 && !karte.classList.contains('offen')) oeffnen();
+      else if (dx < 0 && karte.classList.contains('offen')) zuklappen();
+    } else if (Math.abs(dy) >= SWIPE_MIN && Math.abs(dy) > Math.abs(dx)*1.1){
+      if (dy > 0 && !karte.classList.contains('offen')) oeffnen();
+      else if (dy < 0 && karte.classList.contains('offen')) zuklappen();
+    }
   });
   karte.addEventListener('pointercancel', ()=>{ startX = startY = null; });
+
+  // Scroll nach unten (wheel + touch auf window) öffnet die Karte
+  let scrollGate = false;
+  function scrollOeffner(){
+    if (karte.classList.contains('offen') || scrollGate) return;
+    scrollGate = true;
+    oeffnen();
+    setTimeout(()=>{ scrollGate = false; }, 1400);
+  }
+  window.addEventListener('wheel', e => {
+    if (e.deltaY > 15) scrollOeffner();
+  }, {passive:true});
+  let winTouchY = null;
+  window.addEventListener('touchstart', e => {
+    if (karte.classList.contains('offen')) return;
+    winTouchY = e.touches[0].clientY;
+  }, {passive:true});
+  window.addEventListener('touchmove', e => {
+    if (winTouchY === null) return;
+    const dy = e.touches[0].clientY - winTouchY;
+    if (dy < -25) { scrollOeffner(); winTouchY = null; }
+  }, {passive:true});
+  window.addEventListener('touchend', ()=>{ winTouchY = null; }, {passive:true});
 
   musikBtn.addEventListener('click', ()=>{
     if(musik.paused){
