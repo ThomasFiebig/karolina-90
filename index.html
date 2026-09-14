@@ -56,7 +56,7 @@
     perspective:1800px;
     perspective-origin:50% 50%;
     width:min(360px, 88vw);
-    aspect-ratio: 3/5.5;
+    aspect-ratio: 3/6.2;
     z-index:1;
   }
 
@@ -80,7 +80,7 @@
     box-shadow:
       0 30px 60px rgba(60,20,10,.35),
       inset 0 0 0 1px rgba(168,128,58,.2);
-    padding: 40px 30px 40px;
+    padding: 30px 30px 40px;
     display:flex;flex-direction:column;
     overflow:hidden;
   }
@@ -90,6 +90,28 @@
     border:1px solid rgba(168,128,58,.35);
     pointer-events:none;
     border-radius:2px;
+  }
+
+  .medaillon{
+    position:relative;width:96px;height:96px;border-radius:50%;
+    margin:6px auto 12px;
+    background:url("assets/portrait_aktuell.jpg") center 22% / cover no-repeat;
+    box-shadow:
+      0 0 0 1px rgba(168,128,58,.55),
+      0 0 0 4px var(--creme-hell),
+      0 0 0 5px rgba(168,128,58,.35),
+      0 8px 20px rgba(60,20,10,.28);
+    opacity:0;transform:scale(.85);
+  }
+  .karte.offen .medaillon{animation:medFade .7s cubic-bezier(.4,1.5,.5,1) forwards .55s}
+  @keyframes medFade{
+    from{opacity:0;transform:scale(.7) rotate(-10deg)}
+    to{opacity:1;transform:scale(1) rotate(0)}
+  }
+  .med-jahr{
+    position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);
+    font-family:'Great Vibes',cursive;font-size:20px;color:var(--bordeaux);
+    line-height:1;white-space:nowrap;
   }
 
   .kicker-i{
@@ -219,28 +241,36 @@
     pointer-events:none;border-radius:2px;z-index:3;
   }
 
-  /* Portrait-Hero */
+  /* Portrait-Hero: JUGEND-Portrait mit Vintage-Look */
   .hero{
     position:relative;
     height:58%;
-    background-image:url("assets/portrait_aktuell.jpg");
+    background-image:url("assets/portrait_jugend.jpg");
     background-size:cover;
-    background-position:center 28%;
-    /* Duotone-Look mit CSS-Filter */
-    filter: sepia(.42) contrast(1.08) brightness(.98) saturate(1.05);
+    background-position:center 22%;
+    filter: sepia(.55) contrast(1.05) brightness(.96) saturate(.85);
   }
   .hero::after{
     content:"";
     position:absolute;inset:0;
     background:
-      linear-gradient(180deg, rgba(92,20,40,.05) 0%, transparent 30%, rgba(92,20,40,.55) 100%);
+      radial-gradient(ellipse at center, transparent 40%, rgba(60,20,10,.55) 100%),
+      linear-gradient(180deg, rgba(92,20,40,.08) 0%, transparent 30%, rgba(92,20,40,.55) 100%);
     mix-blend-mode:multiply;
   }
   .hero::before{
     content:"";
     position:absolute;inset:0;
-    background:linear-gradient(140deg, rgba(155,88,58,.15), transparent 60%);
+    background:linear-gradient(140deg, rgba(200,160,90,.18), transparent 60%);
     mix-blend-mode:overlay;
+  }
+  .hero-jahr{
+    position:absolute;bottom:10px;right:14px;z-index:2;
+    font-family:'Great Vibes',cursive;font-size:26px;
+    color:rgba(247,236,204,.72);
+    letter-spacing:.5px;
+    text-shadow:0 1px 2px rgba(0,0,0,.4);
+    pointer-events:none;
   }
 
   /* Cover-Textblock unten */
@@ -342,6 +372,7 @@
     <!-- Innenseite (Text) -->
     <div class="innen">
       <button class="schliessen" id="schliessen" type="button" aria-label="Karte zuklappen">×</button>
+      <div class="medaillon" aria-hidden="true"><span class="med-jahr">heute</span></div>
       <div class="kicker-i">herzliche</div>
       <div class="h-einladung">EINLADUNG</div>
       <div class="zierlinie"></div>
@@ -368,7 +399,9 @@
 
     <!-- Cover -->
     <div class="cover" id="cover">
-      <div class="hero" aria-hidden="true"></div>
+      <div class="hero" aria-hidden="true">
+        <div class="hero-jahr">damals</div>
+      </div>
       <div class="cover-text">
         <div class="cover-kicker">Einladung</div>
         <div class="cover-super">Karolina · wird</div>
@@ -453,6 +486,24 @@
 
   cover.addEventListener('click', oeffnen);
   schliessen.addEventListener('click', e=>{ e.stopPropagation(); zuklappen(); });
+
+  // Wisch-Gestik: swipe links = öffnen, swipe rechts = schließen
+  let startX = null, startY = null;
+  const SWIPE_MIN = 55;
+  karte.addEventListener('pointerdown', e => {
+    if (e.target.closest('a, button')) return;
+    startX = e.clientX; startY = e.clientY;
+  });
+  karte.addEventListener('pointerup', e => {
+    if (startX === null) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    startX = startY = null;
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy)*1.2) return;
+    if (dx < 0 && !karte.classList.contains('offen')) oeffnen();
+    else if (dx > 0 && karte.classList.contains('offen')) zuklappen();
+  });
+  karte.addEventListener('pointercancel', ()=>{ startX = startY = null; });
 
   musikBtn.addEventListener('click', ()=>{
     if(musik.paused){
