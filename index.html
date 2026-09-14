@@ -39,8 +39,8 @@
     background:
       radial-gradient(ellipse at 50% 20%, #f3ead0 0%, #e7d9b0 55%, #d6c493 100%);
     min-height:100vh;
-    display:grid;place-items:center;
-    padding:24px 16px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:20px 16px 70px;
     overflow-x:hidden;
   }
   body::before{
@@ -55,9 +55,13 @@
     position:relative;
     perspective:1800px;
     perspective-origin:50% 50%;
-    width:min(360px, 88vw);
-    aspect-ratio: 3/6.2;
+    width:min(340px, 86vw);
+    aspect-ratio: 3/5.2;
+    max-height: 88dvh;
     z-index:1;
+  }
+  @supports not (height: 1dvh){
+    .buehne{ max-height: 88vh; }
   }
 
   .karte{
@@ -80,7 +84,7 @@
     box-shadow:
       0 30px 60px rgba(60,20,10,.35),
       inset 0 0 0 1px rgba(168,128,58,.2);
-    padding: 30px 30px 40px;
+    padding: 26px 28px 32px;
     display:flex;flex-direction:column;
     overflow:hidden;
   }
@@ -93,8 +97,8 @@
   }
 
   .medaillon{
-    position:relative;width:96px;height:96px;border-radius:50%;
-    margin:6px auto 12px;
+    position:relative;width:82px;height:82px;border-radius:50%;
+    margin:4px auto 10px;
     background:url("assets/portrait_aktuell.jpg") 65% 12% / cover no-repeat;
     box-shadow:
       0 0 0 1px rgba(168,128,58,.55),
